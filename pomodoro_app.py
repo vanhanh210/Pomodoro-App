@@ -1,42 +1,20 @@
 import streamlit as st
 import time
 
-# Custom CSS
-def custom_css():
-    st.markdown(
-        """
-        <style>
-            .theme-switch { display: flex; justify-content: center; align-items: center; }
-            button { margin: 5px; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-# Toggle Dark/Light Mode
-def toggle_mode():
-    if st.session_state.theme == "dark":
-        st.write("🌙 Dark Mode")
-    else:
-        st.write("☀️ Light Mode")
-
-@st.cache
-def load_theme():
-    return "light"
-
 st.set_page_config(page_title="Pomodoro Timer", layout="wide")
-custom_css()
 
-if "theme" not in st.session_state:
-    st.session_state.theme = load_theme()
-
-if st.sidebar.button("Toggle Theme"):
-    st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
-
-toggle_mode()
-
+# Header
 st.title("Pomodoro Timer")
+st.markdown(
+    """
+    The Pomodoro Technique is a time management method that uses a timer 
+    to break work into intervals, traditionally 25 minutes in length, 
+    separated by short breaks. Customize the work and break durations, 
+    then click the "Start Pomodoro" button to begin!
+    """
+)
 
+# Sidebars
 work_duration = st.sidebar.number_input(
     "Work session duration (minutes):",
     min_value=1,
@@ -44,6 +22,7 @@ work_duration = st.sidebar.number_input(
     value=25,
     step=1,
 )
+
 break_duration = st.sidebar.number_input(
     "Break session duration (minutes):",
     min_value=1,
@@ -52,18 +31,15 @@ break_duration = st.sidebar.number_input(
     step=1,
 )
 
-col1, col2, col3 = st.columns([1, 1, 1])
+tags = st.sidebar.multiselect(
+    "Add tags to categorize your tasks:",
+    options=["Work", "Study", "Exercise", "Meditation", "Reading", "Writing"],
+)
 
-with col2:
-    st.subheader("Tags")
-    tags = st.multiselect(
-        "Add tags to categorize your tasks:",
-        options=["Work", "Study", "Exercise", "Meditation", "Reading", "Writing"],
-    )
-
+# Main app
 def pomodoro_timer(work_duration, break_duration):
-    st.write("Work session duration: **{} minutes**".format(work_duration))
-    st.write("Break session duration: **{} minutes**".format(break_duration))
+    st.subheader("Work session duration: **{} minutes**".format(work_duration))
+    st.subheader("Break session duration: **{} minutes**".format(break_duration))
 
     timer = st.empty()
     progress_bar = st.progress(0)
