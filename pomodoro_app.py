@@ -3,6 +3,26 @@ import time
 
 st.set_page_config(page_title="Pomodoro Timer", layout="wide")
 
+# CSS for pixel-style design
+st.markdown(
+    """
+    <style>
+    .big-clock {
+        font-family: 'Courier New', monospace;
+        font-size: 100px;
+        text-align: center;
+        padding: 20px;
+        color: #000;
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Header
 st.title("Pomodoro Timer")
 st.markdown(
@@ -45,10 +65,17 @@ def pomodoro_timer(work_duration, break_duration):
     progress_bar = st.progress(0)
 
     st.write("Start working!")
+
     for i in range(work_duration * 60):
         time.sleep(1)
-        timer.markdown(f"**{int((work_duration * 60 - i) / 60)}:{(work_duration * 60 - i) % 60:02d}**")
+        minutes = int((work_duration * 60 - i) / 60)
+        seconds = (work_duration * 60 - i) % 60
+        timer.markdown(
+            f"<p class='big-clock'>{minutes:02d}:{seconds:02d}</p>",
+            unsafe_allow_html=True
+        )
         progress_bar.progress(i / (work_duration * 60))
+
     st.write("Time for a break!")
 
     timer.empty()
@@ -58,8 +85,14 @@ def pomodoro_timer(work_duration, break_duration):
 
     for i in range(break_duration * 60):
         time.sleep(1)
-        timer.markdown(f"**{int((break_duration * 60 - i) / 60)}:{(break_duration * 60 - i) % 60:02d}**")
+        minutes = int((break_duration * 60 - i) / 60)
+        seconds = (break_duration * 60 - i) % 60
+        timer.markdown(
+            f"<p class='big-clock'>{minutes:02d}:{seconds:02d}</p>",
+            unsafe_allow_html=True
+        )
         progress_bar.progress(i / (break_duration * 60))
+
     st.write("Break is over! Start your next session or take a longer break.")
 
 if st.button("🍅 Start Pomodoro"):
